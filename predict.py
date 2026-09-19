@@ -1,79 +1,60 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import requests
 
-# Set page title and layout
+# Configure page metadata and layout
 st.set_page_config(
     page_title="Movie Recommender System",
     page_icon="🎬",
     layout="wide"
 )
 
-# ----------------- Helper Functions ----------------- #
-def fetch_poster(movie_id):
-    """
-    Optional: Fetch movie poster using TMDB API.
-    If you don't use poster images, you can omit this function.
-    """
-    try:
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=YOUR_TMDB_API_KEY&language=en-US"
-        data = requests.get(url).json()
-        poster_path = data['poster_path']
-        full_path = f"https://image.tmdb.org/t/p/w500/{poster_path}"
-        return full_path
-    except Exception:
-        return "https://via.placeholder.com/500x750?text=No+Image"
-
-def recommend(movie):
-    """
-    Core recommendation logic (same as your Tkinter script).
-    """
-    index = movies[movies['title'] == movie].index[0]
-    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
-    
-    recommended_movie_names = []
-    recommended_movie_posters = []
-    
-    for i in distances[1:6]:
-        # Fetch movie details
-        movie_id = movies.iloc[i[0]].movie_id if 'movie_id' in movies.columns else None
-        recommended_movie_names.append(movies.iloc[i[0]].title)
-        
-        # If using posters:
-        if movie_id:
-            recommended_movie_posters.append(fetch_poster(movie_id))
-   # 1. Define the caching loader function
+# ----------------- Load Data & Models ----------------- #
 @st.cache_data
 def load_data():
+    # Load data using your repository's exact filenames
     movies_df = pickle.load(open('movie_data.pkl', 'rb'))
     similarity_matrix = pickle.load(open('similarity.pkl', 'rb'))
     return movies_df, similarity_matrix
 
-# 2. CALL THE FUNCTION to create the 'movies' variable:
+# Execute the loader to assign movies and similarity
 movies, similarity = load_data()
 
-# 3. Now you can use movies['title'].values safely:
+# ----------------- Recommendation Logic ----------------- #
+def recommend(movie_title):
+    # Locate index of the selected movie
+    movie_index = movies[movies['title'] == movie_title].index[0]
+    
+    # Sort pairwise similarity scores in descending order
+    distances = sorted(
+        list(enumerate(similarity[movie_index])),
+        reverse=True,
+        key=lambda x: x[1]
+    )
+    
+    # Extract the top 5 recommended movie titles (excluding the movie itself at index 0)
+    recommended_titles = []
+    for item in distances[1:6]:
+        recommended_titles.append(movies.iloc[item[0]].title)
+        
+    return recommended_titles
+
+# ----------------- Streamlit User Interface ----------------- #
 st.title("🎬 Movie Recommender System")
 st.write("Select a movie from the dropdown to get personalized recommendations.")
 
+# Dropdown selection populated from your movie titles
 selected_movie = st.selectbox(
     "Type or select a movie you like:",
     movies['title'].values
-)         
-return recommended_movie_names, recommended_movie_posters
+)
 
-# ----------------- Load Data / Models ----------------- #
-
-
-# Button (replaces tk.Button)
+# Recommendation trigger button
 if st.button("Show Recommendations"):
-    names, posters = recommend(selected_movie)
+    recommendations = recommend(selected_movie)
     
-    # Display results in 5 columns
+    st.subheader("Top Recommendations for You:")
     cols = st.columns(5)
-    for col, name in zip(cols, names):
+    for col, title in zip(cols, recommendations):
         with col:
-            st.text(name)
-            # If displaying posters:
-            # st.image(poster)
+            st.info(title)
