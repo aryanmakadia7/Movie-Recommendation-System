@@ -61,7 +61,7 @@ selected_movie = st.selectbox(
     "Type or select a movie you like:",
     movies['title'].values
 )         
-    return recommended_movie_names, recommended_movie_posters
+return recommended_movie_names, recommended_movie_posters
 
 # ----------------- Load Data / Models ----------------- #
 
