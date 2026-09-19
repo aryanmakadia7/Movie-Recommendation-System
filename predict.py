@@ -43,24 +43,28 @@ def recommend(movie):
         # If using posters:
         if movie_id:
             recommended_movie_posters.append(fetch_poster(movie_id))
-            
-    return recommended_movie_names, recommended_movie_posters
-
-# ----------------- Load Data / Models ----------------- #
+   # 1. Define the caching loader function
 @st.cache_data
 def load_data():
     movies_df = pickle.load(open('movie_data.pkl', 'rb'))
     similarity_matrix = pickle.load(open('similarity.pkl', 'rb'))
     return movies_df, similarity_matrix
-# ----------------- Streamlit UI ----------------- #
+
+# 2. CALL THE FUNCTION to create the 'movies' variable:
+movies, similarity = load_data()
+
+# 3. Now you can use movies['title'].values safely:
 st.title("🎬 Movie Recommender System")
 st.write("Select a movie from the dropdown to get personalized recommendations.")
 
-# Dropdown / Selectbox (replaces ttk.Combobox)
 selected_movie = st.selectbox(
     "Type or select a movie you like:",
     movies['title'].values
-)
+)         
+    return recommended_movie_names, recommended_movie_posters
+
+# ----------------- Load Data / Models ----------------- #
+
 
 # Button (replaces tk.Button)
 if st.button("Show Recommendations"):
