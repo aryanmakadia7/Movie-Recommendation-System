@@ -7,9 +7,9 @@ TF-IDF vectorization and cosine similarity.
 
 # 🎬 Movie Recommendation System
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]https://movie-recommendation-system-gzmcunvpanbjvimtd2hskm.streamlit.app/
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://movie-recommendation-system-gzmcunvpanbjvimtd2hskm.streamlit.app/)
 
-Try the live web app here: [Live Demo]https://movie-recommendation-system-gzmcunvpanbjvimtd2hskm.streamlit.app/
+Try the live web app here: [Live Demo]https:(//movie-recommendation-system-gzmcunvpanbjvimtd2hskm.streamlit.app/)
 
 
 ## 🚀 Features
