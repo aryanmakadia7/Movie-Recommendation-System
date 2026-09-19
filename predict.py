@@ -49,14 +49,9 @@ def recommend(movie):
 # ----------------- Load Data / Models ----------------- #
 @st.cache_data
 def load_data():
-    # Adjust filenames according to your saved model/data files
-    movies_dict = pickle.load(open('movie_dict.pkl', 'rb'))
-    movies_df = pd.DataFrame(movies_dict)
+    movies_df = pickle.load(open('movie_data.pkl', 'rb'))
     similarity_matrix = pickle.load(open('similarity.pkl', 'rb'))
     return movies_df, similarity_matrix
-
-movies, similarity = load_data()
-
 # ----------------- Streamlit UI ----------------- #
 st.title("🎬 Movie Recommender System")
 st.write("Select a movie from the dropdown to get personalized recommendations.")
