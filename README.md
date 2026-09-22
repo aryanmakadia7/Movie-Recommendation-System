@@ -1,5 +1,9 @@
 # 🎬 Movie Recommendation System
 
+## 🚀 Live Demo
+
+[Live Demo](https://movie-recommendation-system-gzmcunvpanbjvimtd2hskm.streamlit.app/)
+
 A machine learning based movie recommendation system built using Python.
 
 The system recommends movies similar to a selected movie using
